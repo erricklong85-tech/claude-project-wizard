@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Claude Code Session State",
+  "description": "Complete session state for context management and resume functionality",
+  "type": "object",
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when state was saved"
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Unique session identifier (format: YYYY-MM-DD_HHMMSS)",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}_\\d{6}$"
+    },
+    "sessionEnded": {
+      "type": "boolean",
+      "description": "Whether this session was properly ended (vs just saved)"
+    },
+    "git": {
+      "type": "object",
+      "properties": {
+        "branch": {
+          "type": "string",
+          "description": "Current git branch"
+        },
+        "lastCommit": {
+          "type": "object",
+          "properties": {
+            "hash": {
+              "type": "string",
+              "description": "Commit hash (short)"
+            },
+            "message": {
+              "type": "string",
+              "description": "Commit message"
+            }
+          }
+        },
+        "uncommittedChanges": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of uncommitted file paths"
+        },
+        "remote": {
+          "type": "object",
+          "properties": {
+            "ahead": {
+              "type": "number",
+              "description": "Commits ahead of remote"
+            },
+            "behind": {
+              "type": "number",
+              "description": "Commits behind remote"
+            }
+          }
+        }
+      }
+    },
+    "backgroundTasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Task ID from /tasks"
+          },
+          "command": {
+            "type": "string",
+            "description": "Command that started the task"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["running", "stopped", "completed", "error"]
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL if applicable (e.g., dev server)"
+          }
+        }
+      }
+    },
+    "todos": {
+      "type": "object",
+      "properties": {
+        "completed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "inProgress": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pending": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tokenUsage": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "type": "number",
+          "description": "Current token usage"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum tokens (usually 200000)"
+        },
+        "percentage": {
+          "type": "number",
+          "description": "Percentage of limit (0-100)"
+        }
+      }
+    },
+    "userContext": {
+      "type": "object",
+      "properties": {
+        "accomplished": {
+          "type": "string",
+          "description": "What user accomplished this session"
+        },
+        "currentWork": {
+          "type": "string",
+          "description": "What user is currently working on"
+        },
+        "nextAction": {
+          "type": "string",
+          "description": "What should happen next"
+        },
+        "blockers": {
+          "type": "string",
+          "description": "Any issues or blockers encountered"
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "node": {
+          "type": "string",
+          "description": "Node.js version"
+        },
+        "npm": {
+          "type": "string",
+          "description": "npm version"
+        },
+        "platform": {
+          "type": "string",
+          "description": "OS platform (win32, darwin, linux)"
+        },
+        "cwd": {
+          "type": "string",
+          "description": "Working directory"
+        }
+      }
+    },
+    "resumeCommand": {
+      "type": "string",
+      "description": "Pre-generated command to paste when resuming"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "sessionDuration": {
+          "type": "number",
+          "description": "Duration in minutes"
+        },
+        "checkpointCount": {
+          "type": "number",
+          "description": "Number of checkpoints this session"
+        },
+        "commitCount": {
+          "type": "number",
+          "description": "Number of commits this session"
+        }
+      }
+    }
+  },
+  "required": ["timestamp", "sessionId", "git", "tokenUsage", "resumeCommand"]
+}

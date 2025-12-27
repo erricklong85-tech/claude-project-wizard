@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Context Management - Runtime state files
+SESSION_STATE.json
+CLAUDE.md.backup
+*.backup
+
+# Keep session archives (don't ignore sessions/ directory)
+!sessions/
